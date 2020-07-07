@@ -1,0 +1,193 @@
+{% extends 'layout.html' %}
+{% include 'includes/_navbar.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="../static/css/nurse_page.css">
+
+{% endblock %}
+
+{% block body %}
+<div style="padding-bottom: 3rem;"></div>
+<div class="container">
+    <div class="header">
+      <div>
+        <h1>Dashboard</h1><h6 class="text-muted">Welcome, Laboratorist</h6>
+      </div>
+    </div>
+    <hr size="30" style="padding-bottom: 2rem;">
+            <div class="alert alert-success generate-bill-alert-div" hidden role="alert">Lab Bill Generated Successfully!
+        </div>
+    
+    <h2 class="sub-heading">
+        <span>Pending Lab Tests</span>
+    </h2>
+    <div class="table-responsive my-table" id="my-table" style="overflow-x: hidden;">
+        <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th >Test Name</th>
+                    <th >Room No.</th>
+                    <th  hidden>Test Number</th>
+                    <th></th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in tests %}
+                    <tr>
+                        <td>{{ o.test_name }}</td>
+                        <td>{{ o.ward_no }}</td>
+                        <td style="display: none;">{{ o.lab_test_no }}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger table-btn" onclick="removeRow(this);">Remove
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button hidden class= "btn btn-rounded blue-grey white-text my-btn generate-bill-trigger" type="button" 
+    data-toggle="modal"  data-target="#generateBillModal" style="margin-bottom: 4rem;">Generate Lab Bill</button>
+</div>
+
+
+<!-- generate bill Modal -->
+<div class="modal fade" id="generateBillModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+    <div class="modal-header white-text primary-color">
+        <h5 class="modal-title" id="exampleModalLongTitle">Generate Lab Bill</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form class="main-form needs-validation generate_bill_form"  method="post">
+            <div hidden class="md-form">
+                <label for="test-id" hidden>Test ID </label>
+                <input type="text" name="test-id" hidden
+                id="test-id"
+                class="form-control" value="">
+                <div class="invalid-feedback"> Invalid ID! </div>
+            </div>
+            <div hidden class="md-form">
+                <label for="room-no"> Room Number</label>
+                <input type="text" name="room-no" required
+                pattern="[0-9]{1,}" id="room-no"
+                class="form-control" value="">
+                <div class="invalid-feedback"> Invalid Number! </div>
+            </div>
+            <div class="form-group">
+                <label for="test-name"> Test Name</label>
+                <input type="text" name="test-name" required
+                 id="test-name"
+                class="form-control" value="">
+                <div class="invalid-feedback"> Invalid Name! </div>
+            </div>
+            <div class="form-group">
+                <label for="bill-amount">Enter Bill Amount</label>
+                <input type="text" name="bill-amount" required
+                       pattern="[0-9]{2,}" id="bill-amount"
+                       placeholder="Enter total bill amount" class="form-control" value="">
+                <div class="invalid-feedback"> Invalid Amount!</div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+<!--        <button type="button" class="btn btn-rounded white-text blue-grey " data-dismiss="modal">Close</button>-->
+        <button type="submit" id = "generate_bill_btn" class="btn primary-color white-text" onclick="generate_bill();">Generate Bill</button>
+    </div>
+    </div>
+</div>
+</div>
+
+
+<!-- JavaScript -->
+    <script>
+        (function (document) {
+            'use strict';
+
+            var TableFilter = (function (myArray) {
+                var search_input;
+
+                function _onInputSearch(e) {
+                    search_input = e.target;
+                    var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+                    myArray.forEach.call(tables, function (table) {
+                        myArray.forEach.call(table.tBodies, function (tbody) {
+                            myArray.forEach.call(tbody.rows, function (row) {
+                                var text_content = row.textContent.toLowerCase();
+                                var search_val = search_input.value.toLowerCase();
+                                row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                            });
+                        });
+                    });
+                }
+
+                return {
+                    init: function () {
+                        var inputs = document.getElementsByClassName('search-input');
+                        myArray.forEach.call(inputs, function (input) {
+                            input.oninput = _onInputSearch;
+                        });
+                    }
+                };
+            })(Array.prototype);
+
+            document.addEventListener('readystatechange', function () {
+                if (document.readyState === 'complete') {
+                    TableFilter.init();
+                }
+            });
+
+        })(document);
+
+    </script>
+
+<script>
+    function removeRow(btn) {
+        var row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+</script>
+
+<script>
+        function generate_bill() {
+            var form = document.querySelector(".generate_bill_form");
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                document.querySelector("#generate_bill_btn").setAttribute("data-dismiss", "modal");
+                window.scrollTo(0, 0);
+                setTimeout(function () {
+                    form.submit();
+                }, 1500);
+            }
+            form.classList.add("was-validated");
+        }
+</script>
+    <!-- Generate Bill Details -->
+    <script>
+
+        var table = document.getElementById("my-table"), rIndex;
+        var rows = document.getElementsByTagName("tr");
+
+        for (var i = 1; i < rows.length; i++) {
+            rows[i].onclick = function () {
+                rIndex = this.rowIndex;
+                var test_id = this.cells[2].innerHTML;
+                var test_name = this.cells[0].innerHTML;
+                var room_number = this.cells[1].innerHTML;
+                document.querySelector("#room-no").value = room_number;
+                document.querySelector("#test-id").value = test_id;
+                document.querySelector("#test-name").value = test_name;
+                document.querySelector(".generate-bill-trigger").click();
+            }
+        }
+    </script>
+
+
+
+{% endblock %}

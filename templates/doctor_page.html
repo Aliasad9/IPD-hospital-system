@@ -1,0 +1,186 @@
+{% extends 'layout.html' %}
+{% include 'includes/_navbar.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="../static/css/doctor_page.css">
+{% endblock %}
+
+{% block body %}
+<div style="padding-bottom: 3rem;"></div>
+<div class="container">
+    <div class="header">
+        <div>
+            <h1>Dashboard</h1><h6 class="text-muted">Welcome, Doctor</h6>
+        </div>
+    </div>
+    <hr size="30" style="padding-bottom: 1rem;">
+    <h2 class="sub-heading">
+        <span>Patient List</span>
+
+    </h2>
+    <div class="table-responsive my-table" id="my-table" style="overflow-x: hidden;">
+        <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th style="display: none;">Patient ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Age</th>
+                <th>Blood Group</th>
+                <th>Disease</th>
+                <th>Allergies</th>
+                <th>Room Number</th>
+                <th hidden>Room Number</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for pat,age,list_m in pat_age_listm %}
+            <tr>
+                <td style="display: none;">{{ pat.reg_no }}</td>
+                <td>{{ pat.fname }}</td>
+                <td>{{ pat.lname }}</td>
+                <td>{{ age }}</td>
+                <td>{{ pat.blood_group }}</td>
+                <td>{{ pat.disease }}</td>
+                <td>{{ pat.allergies }}</td>
+                <td>{{ pat.ward_id }}</td>
+
+                {% if list_m %}
+                {% for l in list_m %}
+                <td style="display: none">{{ l.name }} ({{ l.mg }}mg)<br></td>
+                {% endfor %}
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- hidden button to toggle Details Modal -->
+<button type="button" class="more-info-btn modal-btn btn-primary" hidden data-toggle="modal"
+        data-target="#exampleModalCenter">
+    Launch modal
+</button>
+
+<!-- Patient Details modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-notify modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header white-text primary-color">
+                <h5 class="modal-title white-text" id="exampleModalLongTitle">Patient Details</h5>
+                <button type="button" class=" white-text close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body info-body">
+                <div class="names">
+                    <span hidden>osamvd</span><br>
+                    <span style='font-weight: bold;'>First Name:</span><br>
+                    <span style='font-weight: bold;'>Last Name:</span><br>
+                    <span style='font-weight: bold;'>Age:</span><br>
+                    <span style='font-weight: bold;'>Room Number:</span><br>
+                    <span style='font-weight: bold;'>Blood Group:</span><br>
+                    <span style='font-weight: bold;'>Diseases:</span><br>
+                    <span style='font-weight: bold;'>Allergies:</span><br>
+                    <span style='font-weight: bold;' id="Medicine_id">Medicines:</span><br>
+                </div>
+                <div class="values">
+                    <span id="reg-no"></span><br>
+                    <span id="fname"></span><br>
+                    <span id="lname"></span><br>
+                    <span id="gender"></span><br>
+                    <span id="room-no"></span><br>
+                    <span id="blood-group"></span><br>
+
+                    <span id="disease"></span>
+
+                    <br>
+                    <span id="allergies"></span><br>
+                    <span id="age"></span><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Search -->
+<script>
+    (function (document) {
+        'use strict';
+
+        var TableFilter = (function (myArray) {
+            var search_input;
+
+            function _onInputSearch(e) {
+                search_input = e.target;
+                var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+                myArray.forEach.call(tables, function (table) {
+                    myArray.forEach.call(table.tBodies, function (tbody) {
+                        myArray.forEach.call(tbody.rows, function (row) {
+                            var text_content = row.textContent.toLowerCase();
+                            var search_val = search_input.value.toLowerCase();
+                            row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                        });
+                    });
+                });
+            }
+
+            return {
+                init: function () {
+                    var inputs = document.getElementsByClassName('search-input');
+                    myArray.forEach.call(inputs, function (input) {
+                        input.oninput = _onInputSearch;
+                    });
+                }
+            };
+        })(Array.prototype);
+
+        document.addEventListener('readystatechange', function () {
+            if (document.readyState === 'complete') {
+                TableFilter.init();
+            }
+        });
+
+    })(document);
+
+</script>
+
+<!-- Patient Details -->
+<script>
+
+    var table = document.getElementById("my-table"), rIndex;
+    var rows = document.getElementsByTagName("tr");
+
+    for (var i = 1; i < rows.length; i++) {
+        rows[i].onclick = function () {
+            rIndex = this.rowIndex;
+            document.querySelector("#age").innerHTML = "";
+
+            document.querySelector("#fname").innerHTML = this.cells[1].innerHTML;
+            document.querySelector("#lname").innerHTML = this.cells[2].innerHTML;
+            document.querySelector("#gender").innerHTML = this.cells[3].innerHTML;
+            document.querySelector("#blood-group").innerHTML = this.cells[4].innerHTML;
+            document.querySelector("#disease").innerHTML = this.cells[5].innerHTML;
+            document.querySelector("#allergies").innerHTML = this.cells[6].innerHTML;
+            document.querySelector("#room-no").innerHTML = this.cells[7].innerHTML;
+            console.log(this.cells.length);
+            if (this.cells.length > 8) {
+                document.querySelector("#Medicine_id").innerHTML = "<span style='font-weight: bold;'>Medicines:<br></span>";
+                for (var j = 8; j < this.cells.length; j++) {
+                    document.querySelector("#age").innerHTML += this.cells[j].innerHTML;
+                }
+            } else {
+                document.querySelector("#Medicine_id").innerHTML = "";
+            }
+            document.querySelector(".more-info-btn").click();
+        }
+
+    }
+</script>
+
+{% endblock %}

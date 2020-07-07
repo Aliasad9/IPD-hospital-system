@@ -1,0 +1,235 @@
+{% extends 'layout.html' %}
+{% include 'includes/_navbar_patient_page.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="../static/css/laboratorist_page.css">
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="header">
+        <div>
+            <h1>Discharge Patient</h1>
+        </div>
+
+    </div>
+    <hr size="30">
+
+    <h2 class="sub-heading">
+        <span>Patients List</span>
+        <input type="search" placeholder="Search..."
+               class="form-control search-input" data-table="customers-list"/>
+    </h2>
+    <div class="table-responsive my-table" id="my-table">
+        <table id="my-table" class="table table-hover mt32 customers-list">
+            <thead>
+            <tr>
+                <th style="display: none;">Patient ID</th>
+                <th style="font-weight: bold">First Name</th>
+                <th style="font-weight: bold">Last Name</th>
+                <th style="font-weight: bold">Gender</th>
+                <th style="font-weight: bold">Blood Group</th>
+                <th style="font-weight: bold">Disease</th>
+                <th style="font-weight: bold">Allergies</th>
+                <th style="font-weight: bold">Room Number</th>
+                <th style="font-weight: bold">Pending Lab Tests</th>
+                <th style="display: none;">Food Bill</th>
+                <th style="display: none;">Room Bill</th>
+                <th style="display: none;">Medicine Bill</th>
+                <th style="display: none;">Lab Test Bill</th>
+                <th style="display: none;">Total Bill</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for patient_list,pending_list,food_l,med_l,room_l,lab_l,total_l in patient_pending_f_m_r_l_t %}
+            <tr>
+                <td style="display: none;">{{ patient_list.reg_no}}</td>
+                <td>{{ patient_list.fname }}</td>
+                <td>{{ patient_list.lname }}</td>
+                <td>{{ patient_list.gender }}</td>
+                <td>{{ patient_list.blood_group }}</td>
+                <td>{{ patient_list.disease }}</td>
+                <td>{{ patient_list.allergies }}</td>
+                <td>{{ patient_list.ward_id }}</td>
+                <td>{{ pending_list }}</td>
+                <td style="display: none;">{{ food_l }}</td>
+                <td style="display: none;">{{ room_l }}</td>
+                <td style="display: none;">{{ med_l }}</td>
+                <td style="display: none;">{{ lab_l }}</td>
+                <td style="display: none;">{{ total_l }}</td>
+
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-notify modal-info" role="document">
+        <div class="modal-content">
+            <form class="main-form add_medicine_form" action="" method='POST'>
+                <div class="modal-header white-text primary-color">
+                    <h5 class="modal-title white-text" id="exampleModalLongTitle">Patient Details</h5>
+                    <button type="button" class=" white-text close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body info-body">
+
+                    <div class="names">
+
+                        <span>Food Bill:</span><br>
+                        <span>Room Bill:</span><br>
+                        <span>Medicine Bill:</span><br>
+                        <span>Lab Test Bill:</span><br>
+                        <span>Total Bill:</span><br>
+
+                    </div>
+
+                    <div class="values">
+
+                        <div hidden class="md-form">
+                            <label for="pat_id">Enter Price </label>
+                            <input type="text" name="pat_id" id="pat_id" class="form-control" value="">
+                        </div>
+                        <span id="food"></span><br>
+                        <span id="room"></span><br>
+                        <span id="med"></span><br>
+                        <span id="lab"></span><br>
+                        <span id="total"></span><br>
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="add_medicine_btn" class="btn  primary-color white-text"
+                            onclick="addTest();"
+                    >Discharge Patient
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="more-info-btn modal-btn btn-primary" hidden data-toggle="modal"
+        data-target="#exampleModalCenter">
+    Launch modal
+</button>
+<!-- JavaScript -->
+
+<!-- Search table Function -->
+<script>
+    (function (document) {
+        'use strict';
+
+        var TableFilter = (function (myArray) {
+            var search_input;
+
+            function _onInputSearch(e) {
+                search_input = e.target;
+                var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+                myArray.forEach.call(tables, function (table) {
+                    myArray.forEach.call(table.tBodies, function (tbody) {
+                        myArray.forEach.call(tbody.rows, function (row) {
+                            var text_content = row.textContent.toLowerCase();
+                            var search_val = search_input.value.toLowerCase();
+                            row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                        });
+                    });
+                });
+            }
+
+            return {
+                init: function () {
+                    var inputs = document.getElementsByClassName('search-input');
+                    myArray.forEach.call(inputs, function (input) {
+                        input.oninput = _onInputSearch;
+                    });
+                }
+            };
+        })(Array.prototype);
+
+        document.addEventListener('readystatechange', function () {
+            if (document.readyState === 'complete') {
+                TableFilter.init();
+            }
+        });
+
+    })(document);
+
+</script>
+
+
+<script>
+
+    var table = document.getElementById("my-table"), rIndex;
+    var rows = document.getElementsByTagName("tr");
+
+    for (var i = 1; i < rows.length; i++) {
+        rows[i].onclick = function () {
+            rIndex = this.rowIndex;
+            document.querySelector("#pat_id").setAttribute("value", this.cells[0].innerHTML);
+            document.querySelector("#food").innerHTML = this.cells[9].innerHTML;
+            document.querySelector("#room").innerHTML = this.cells[10].innerHTML;
+            document.querySelector("#med").innerHTML = this.cells[11].innerHTML;
+            document.querySelector("#lab").innerHTML = this.cells[12].innerHTML;
+            document.querySelector("#total").innerHTML = this.cells[13].innerHTML;
+            document.querySelector(".more-info-btn").click();
+        }
+
+    }
+</script>
+
+<script>
+    function addTest() {
+        var form = document.querySelector(".add_medicine_form");
+
+        form.submit();
+        // document.querySelector("#python-lab-test-btn").setAttribute(onclick, form.submit());
+
+        form.classList.add("was-validated");
+    }
+</script>
+<!--<script>-->
+<!--    var table = document.getElementById("my-table"), rIndex;-->
+<!--    var rows = document.getElementsByTagName("tr");-->
+
+<!--    for (var i = 1; i < rows.length; i++) {-->
+<!--        rows[i].onclick = function () {-->
+<!--            rIndex = this.rowIndex;-->
+<!--            console.log(this.cells[0].innerHTML);-->
+<!--            var row = this.parentNode.parentNode;-->
+<!--            row.parentNode.removeChild(row);-->
+
+<!--        }-->
+<!--    }-->
+<!--</script>-->
+
+<!--<script>-->
+<!--    function generate_bill() {-->
+<!--        var form = document.querySelector(".generate_bill_form");-->
+<!--        if (form.checkValidity() === false) {-->
+<!--            event.preventDefault();-->
+<!--            event.stopPropagation();-->
+<!--        } else {-->
+<!--            document.querySelector("#generate_bill_btn").setAttribute("data-dismiss", "modal");-->
+<!--            window.scrollTo(0, 0);-->
+<!--            setTimeout(function () {-->
+<!--                form.submit();-->
+<!--            }, 1500);-->
+<!--        }-->
+<!--        form.classList.add("was-validated");-->
+<!--    }-->
+<!--</script>-->
+
+
+{% endblock %}

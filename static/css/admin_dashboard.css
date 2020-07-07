@@ -1,0 +1,54 @@
+body {
+    background: #f4f4f4;
+    font-size: 16px;
+    height: 100vh;
+}
+
+.container {
+    width: 600px;
+}
+
+.image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /*don't forget prefixes*/
+    background-image: url("https://via.placeholder.com/150");
+    background-position: center center;
+    /* as mentioned by Vad: */
+    background-size: cover;
+}
+
+.img-section {
+    margin-top: 3rem;
+}
+
+
+.btn {
+    margin: 3rem 0rem 3rem 0rem;
+}
+
+.content {
+    margin-top: 3rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 3px;
+    justify-items: center;
+}
+
+
+

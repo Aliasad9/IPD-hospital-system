@@ -1,0 +1,55 @@
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting:before,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_asc:before,
+table.dataTable thead .sorting_asc_disabled:after,
+table.dataTable thead .sorting_asc_disabled:before,
+table.dataTable thead .sorting_desc:after,
+table.dataTable thead .sorting_desc:before,
+table.dataTable thead .sorting_desc_disabled:after,
+table.dataTable thead .sorting_desc_disabled:before {
+    bottom: .5em;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.options {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.my-table {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+h2 span {
+    font-size: 22px;
+}
+
+
+.sub-heading {
+    margin-top: 2rem;
+}
+
+.btn {
+    margin: 1.5rem 1rem 3rem 0rem;
+}
+
+.key {
+    padding-right: 5rem;
+}
+
+tr:hover {
+    cursor: pointer;
+}
+
+.info-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+

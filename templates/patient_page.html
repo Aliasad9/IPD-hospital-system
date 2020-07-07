@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+{% include 'includes/_navbar.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="../static/css/patient_page.css">
+{% endblock %}
+
+
+{% block body %}
+<div style="padding-bottom: 3rem;"></div>
+
+<div class="container" style="padding-bottom: 4rem;">
+    <div class="card">
+        <div class="img-section">
+            <div>
+                <img class="image" src="../static/patient_avatar.png" alt="">
+            </div>
+        </div>
+        <div class="content">
+            <div class="names">
+                <span>First Name:</span><br><br>
+                <span>Last Name:</span><br><br>
+                <span>Address:</span><br><br>
+                <span>Gender:</span><br><br>
+            </div>
+            <div class="values">
+                <span class="value">{{ personal_info.fname }}</span><br><br>
+                <span class="value">{{ personal_info.lname }}</span><br><br>
+                <span class="value">{{ personal_info.address1 }}</span><br><br>
+                <span class="value">{{ personal_info.gender }}</span><br><br>
+            </div>
+        </div>
+        <div class=" pat_btn">
+            <button type="" data-toggle="modal" data-target="#exampleModalCenter"
+                    class="btn  primary-color white-text btn-lg">View Billing Info
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-notify modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header primary-color">
+                <h5 class="modal-title white-text" id="exampleModalLongTitle">Billing Details</h5>
+                <button type="button" class=" white-text close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body info-body">
+                <div class="names">
+                    <span>Food Bill:</span><br><br>
+                    <span>Room Bill:</span><br><br>
+                    <span>Medicines Bill: </span><br><br>
+                    <span>Lab Tests Bill: </span><br><br>
+                    <span>Total Bill:</span><br><br>
+                </div>
+                <div class="values">
+                    <span>{{ food }}</span><br><br>
+                    <span>{{ room }}</span><br><br>
+                    <span>{{ med }}</span><br><br>
+                    <span>{{ lab }}</span><br><br>
+                    <span>{{ total }}</span><br><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,275 @@
+{% extends 'layout.html' %}
+{% include 'includes/_navbar_patient_page.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="../static/css/admin_dashboard.css">
+{% endblock %}
+
+{% block body %}
+
+
+<div class="container">
+	<div class="header">
+        <div>
+            <h1>Admin Dashboard</h1><h6 class="text-muted">Welcome, Admin!</h6>
+        </div>
+    </div>
+    <hr size="30">
+    <div class="card" style="padding-bottom: 4rem;">
+        <div class="img-section">
+            <div>
+                <img class="image" id="image"  src="../static/img_avatar.png" alt="">
+            </div>
+        </div>
+        <div class="content">
+            <div class="names">
+                <span>First Name:</span><br><br>
+                <span>Last Name:</span><br><br>
+                <span>Address:</span><br><br>
+                <span>Gender:</span><br><br>
+            </div>
+            <div class="values">
+                <span class="value">{{ personal_info.fname }}</span><br><br>
+                <span class="value">{{ personal_info.lname }}</span><br><br>
+                <span class="value">{{ personal_info.address1 }}</span><br><br>
+                <span class="value">{{ personal_info.gender }}</span><br><br>
+            </div>
+        </div>
+    </div>  
+
+</div>
+<div style="padding-bottom: 1rem;"></div>
+
+
+<!-- Modals -->
+
+<!-- Modal to add ward/room-->
+     <div class="modal fade" id="add_room" tabindex="-1" role="dialog" aria-labelledby="add_room" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Title">Add Room</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-container">
+                    <form action="" class="main-form needs-validation add_room_form" method="POST">
+                        <div class="form-group">
+                            <label for="form-id" hidden></label>
+                            <input type="text" name="form-id" id="form-id" value="3" hidden class="form-control">
+                        </div>
+                        <div class="md-form">
+                            <select class="mdb-select md-form" name="department" id="department">
+                                <option value="" disabled selected>Choose Department</option>
+
+                                {% for o in departments_list %}
+                                <option value="{{ o.department_id }}" SELECTED>{{ o.name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="md-form">
+                            <select class="mdb-select md-form" name="type_room" id="type_room">
+                                <option value="" disabled selected>Choose Room Type</option>
+                                {% for o in ward_list %}
+                                    <option value="{{ o.ward_type }}" SELECTED>{{ o.ward_type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="md-form">
+                            <select class="mdb-select md-form" name="kitchen_manager" id="kitchen_manager">
+                                <option value="" disabled selected>Select Kitchen Manager</option>
+                                {% for o in kitchen_manager %}
+                                        <option value="{{ o.reg_no }}" SELECTED>{{ o.fname }} {{ o.lname }}</option>
+                                    {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id = "add_room_btn" class="btn btn-primary" onclick="add_room();">Add Room</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+   <div class="modal fade" id="add_dept" tabindex="-1" role="dialog" aria-labelledby="add_dept" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Title">Add Department</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-container">
+                    <form action="" class=" add_dept_form main-form needs-validation" method="POST">
+                            <div class="md-form">
+                                <label for="form-id" hidden></label>
+                                <input type="text" name="form-id" id="form-id" value="1" hidden class="form-control">
+                            </div>
+                            <div class="md-form">
+                                <label for="add_dept">Department Name</label>
+                                <input type="text" name="add_dept" id="add_dept" class="form-control" required
+                                       pattern="[A-Za-z]{2,}" value="">
+                                <div class="invalid-feedback"> Invalid Department Name!</div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id = "add_dept_btn" class="btn btn-primary" onclick="add_dept();">Add Department</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal to add lab-->
+    <div class="modal fade" id="add_lab" tabindex="-1" role="dialog" aria-labelledby="add_lab" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Title">Add Laboratory</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-container">
+                    <form action="" class=" add_lab_form main-form needs-validation" method="POST">
+                        <div class="form-group">
+                            <label for="form-id" hidden></label>
+                            <input type="text" name="form-id" id="form-id" value="2" hidden class="form-control">
+                        </div>
+                        <div class="md-form">
+                            <select class="mdb-select md-form" name="department" id="department">
+                                <option value="" disabled selected>Choose Department</option>
+
+                                {% for o in departments_list %}
+                                <option value="{{ o.department_id }}" SELECTED>{{ o.name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="md-form">
+                            <label for="type_lab">Type of Lab</label>
+                            <input type="text" name="type_lab" id="type_lab" class="form-control" required
+                                       pattern="[A-Za-z]{2,}" value="">
+                            <div class="invalid-feedback"> Invalid Lab Name!</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id = "add_lab_btn" class="btn btn-primary" onclick="add_lab();">Add Laboratory</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+     <!-- Modal to add ward/room-->
+     <div class="modal fade" id="add_room" tabindex="-1" role="dialog" aria-labelledby="add_room" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Title">Add Room</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-container">
+                    <form action="" class="main-form needs-validation add_room_form" method="POST">
+                        <div class="form-group">
+                            <label for="form-id" hidden></label>
+                            <input type="text" name="form-id" id="form-id" value="3" hidden class="form-control">
+                        </div>
+                        <div class="md-form">
+                            <select class="mdb-select md-form" name="department" id="department">
+                                <option value="" disabled selected>Choose Department</option>
+
+                                {% for o in departments_list %}
+                                <option value="{{ o.department_id }}" SELECTED>{{ o.name }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                        <div class="md-form">
+                            <select class="mdb-select md-form" name="type_room" id="type_room">
+                                <option value="" disabled selected>Choose Room Type</option>
+                                {% for o in ward_list %}
+                                    <option value="{{ o.ward_type }}" SELECTED>{{ o.ward_type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="md-form">
+                            <select class="mdb-select md-form" name="kitchen_manager" id="kitchen_manager">
+                                <option value="" disabled selected>Select Kitchen Manager</option>
+                                {% for o in kitchen_manager %}
+                                        <option value="{{ o.reg_no }}" SELECTED>{{ o.fname }} {{ o.lname }}</option>
+                                    {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id = "add_room_btn" class="btn btn-primary" onclick="add_room();">Add Room</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function add_dept(){
+            var form = document.querySelector(".add_dept_form");
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            else{
+                document.querySelector("#add_dept_btn").setAttribute("data-dismiss", "modal");
+                form.submit();
+            }
+            form.classList.add("was-validated");
+            }
+
+        function add_lab(){
+            var form = document.querySelector(".add_lab_form");
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            else{
+                document.querySelector("#add_lab_btn").setAttribute("data-dismiss", "modal");
+                form.submit();
+            }
+            form.classList.add("was-validated");
+            }
+        function add_room(){
+            var form = document.querySelector(".add_room_form");
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            else{
+                document.querySelector("#add_room_btn").setAttribute("data-dismiss", "modal");
+                form.submit();
+            }
+            form.classList.add("was-validated");
+            }
+    </script>
+
+{% endblock %}

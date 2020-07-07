@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Material Design Bootstrap</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="../static/css/md-bootstrap-css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="../static/css/md-bootstrap-css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="../static/css/md-bootstrap-css/style.css" rel="stylesheet">
+    <link href="../static/css/md-bootstrap-css/addons/datatables.min.css" rel="stylesheet">
+    <link href="../static/css/indexstyle.css" rel="stylesheet">
+
+    <link rel="icon" type="image/svg" href="../static/heartbeat.svg"/>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+
+<div style="display: flex; justify-content: center; padding-top: 2rem">
+    <div class="alert alert-{{ category }} alert-dismissible fade show" id="msg" style="width: 35%" role="alert">
+        <span>{{ message }}</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+{% block body %}{% endblock %}
+
+
+<!-- SCRIPTS -->
+<!-- JQuery -->
+<script type="text/javascript" src="../static/js/jquery-3.4.1.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="../static/js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="../static/js/mdb.min.js"></script>
+
+<script type="text/javascript" src="../static/js/register-patient.js"></script>
+<script type="text/javascript" src="../static/js/adding_users.js"></script>
+<script type="text/javascript" src="../static/js/addons/datatables.min.js"></script>
+<script type="text/javascript" src="../static/js/nurse_page.js"></script>
+<!-- <script>$(document).ready(function () {
+    // SideNav Button Initialization
+    $(".button-collapse").sideNav({
+        slim: true,
+    });
+});</script> -->
+
+<!-- <script type="text/javascript" src="../js/addons/datatables.min.js"></script>
+<script>$(document).ready(function () {
+    $('#dtBasicExample').DataTable();
+    $('.dataTables_length').addClass('bs-select');
+});</script> -->
+
+<script type="text/javascript">window.setTimeout("document.getElementById('msg').style.display='none';", 3000); </script>
+
+</body>
+
+</html>

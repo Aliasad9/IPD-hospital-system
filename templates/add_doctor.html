@@ -1,0 +1,135 @@
+{% extends 'layout.html' %}
+{% include 'includes/_navbar_patient_page.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="../static/css/adding_users.css">
+{% endblock %}
+
+{% block body %}
+<div style="padding-bottom: 3rem;"></div>
+<div class="container">
+    <div class="heading-section">
+        <h1 class="main-form-h1">
+            Add Doctor
+        </h1>
+        <div class="heading-text">
+            <p>
+                Just fill out the following details in order to add a doctor.
+            </p>
+        </div>
+    </div>
+    <div class="form-container">
+        <form class="main-form needs-validation" novalidate action="#" method="POST">
+            <div class="form-row">
+                <div class="col">
+                    <div class="md-form">
+                        <label for="firstname">First Name</label>
+                        <input type="text" name="firstname" id="firstname"
+                               class="form-control" required
+                               pattern="[A-Za-z]{2,}" value="">
+                        <div class="invalid-feedback"> Invalid First Name!</div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="md-form">
+                        <label for="lastname">Last Name</label>
+                        <input type="text" name="lastname" id="lastname" class="form-control" required
+                               pattern="[A-Za-z]{2,}" value="">
+                        <div class="invalid-feedback"> Invalid Last Name!</div>
+                    </div>
+                </div>
+            </div>
+            <div class="md-form">
+                <select class="mdb-select" name="gender" id="gender">
+                    <option value="" disabled selected>Choose Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <br>
+            <div class="md-form">
+                <input type="date" name="dob" id="dob" class="form-control">
+                <label for="dob">Date of Birth</label>
+            </div>
+
+            <div class="md-form">
+                <label for="cnic">CNIC</label>
+                <input type="text" name="cnic" id="cnic" class="form-control" required pattern="[0-9]{13}"
+                       maxlength=13 value="">
+                <div class="invalid-feedback"> Invalid CNIC!</div>
+            </div>
+            <div class="md-form">
+                <label for="email"> Email Address </label>
+                <input type="email" name="email" required id="email" class="form-control" value="">
+                <div class="invalid-feedback"> Invalid Email address!</div>
+            </div>
+            <div class="md-form">
+                <label class="control-label" for="contact-no">Contact Number</label>
+                <input class="form-control" required pattern="[0-9-]{12}" id="contact-no" name="contact-no"
+                       type="text"/>
+                <div class="invalid-feedback"> Invalid Contact Number!</div>
+            </div>
+            <div class="md-form">
+                <label for="acc-no">Account Number</label>
+                <input type="text" name="acc-no" id="acc-no" class="form-control"
+                       required pattern="[0-9]{12}" maxlength=12 value="">
+                <div class="invalid-feedback"> Invalid Account Number!</div>
+            </div>
+            <div class="md-form">
+                <label class="control-label" for="address">Address</label>
+                <input class="form-control" required id="address" name="address"
+                       type="text"/>
+                <div class="invalid-feedback"> Invalid Address!</div>
+            </div>
+            <div class="md-form">
+                <label class="control-label" for="address2">Address 2 </label>
+                <input class="form-control" id="address2" name="address2" type="text"/>
+            </div>
+            <div class="md-form">
+                <select class="mdb-select" name="shift-time" id="shift-time">
+                    <option value="" disabled selected>Choose Shift Time</option>
+                    <option value="morning-shift">Morning Shift (6am-2pm)</option>
+                    <option value="evening-shift">Evening Shift (2pm-10pm)</option>
+                    <option value="night-shift">Night Shift (10pm-6am)</option>
+                </select>
+            </div>
+
+            <div class="md-form">
+                <select class="mdb-select md-form" name="room-no" id="room-no">
+                    <option value="" disabled selected>Select Room No.</option>
+                    {% for o in wards_list %}
+                    <option value="{{ o.ward_no }}" SELECTED>{{ o.ward_no }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="md-form">
+                <select class="mdb-select md-form" name="department" id="department">
+                    <option value="" disabled selected>Choose Department</option>
+                    {% for o in departments_list %}
+                    <option value="{{ o.department_id }}" SELECTED>{{ o.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="md-form">
+                <label for="rank">Rank / Designation</label>
+                <input type="text" name="rank" id="rank"
+                       class="form-control" required value="">
+                <div class="invalid-feedback"> Invalid Rank!</div>
+            </div>
+            <button class="btn primary-color white-text  btn-block">Add Doctor</button>
+        </form>
+    </div>
+</div>
+<script>
+    var form = document.querySelector(".needs-validation");
+    form.addEventListener("submit", function (event) {
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add("was-validated");
+    })
+</script>
+
+{% endblock %}

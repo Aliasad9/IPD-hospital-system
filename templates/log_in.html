@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% include 'includes/_navbar.html' %}
+
+{% block head %}
+<style>
+    .container{
+        width: 500px;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div style="padding-bottom: 3rem;"></div>
+<div class="container">
+    <div class="wrapper">
+        <div class="card">
+            <h5 class="card-header primary-color   white-text text-center py-4">
+                <strong>Sign in</strong>
+              </h5>
+              <div class="card-body px-lg-5 pt-0">
+                <div class="form-container" style="padding-top: 1rem;">
+                    <form class="main-form needs-validation" novalidate action="" method="POST">
+                        <div class="md-form">
+                            <label for="reg-number">Registration Number</label>
+                            <input type="text" name="reg-number" id="reg-number" class="form-control" required value="">
+                            <div class="invalid-feedback"> Invalid Registration Number! </div>
+                        </div>
+                        <div class="md-form">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" required id="password"
+                            class="form-control" value="">
+                            <div class="invalid-feedback"> Invalid Password! </div>
+                        </div>
+                        <div class="form-check" style="padding-left: 0;">
+                            <input type="checkbox" class="form-check-input" id="materialLoginFormRemember">
+                            <label class="form-check-label" for="materialLoginFormRemember">Remember me</label>
+                          </div>
+                        <button type="submit" class=" white-text btn primary-color btn-block" onclick="{{ url_for('dashboard') }}" style="margin-top: 3rem;">Log In</button>
+                    </form>
+                </div>
+              </div>
+        </div>
+        
+    </div>
+</div>
+<script>
+    var form = document.querySelector(".needs-validation");
+
+    form.addEventListener("submit", function (event) {
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add("was-validated");
+    })
+</script>
+{% endblock %}

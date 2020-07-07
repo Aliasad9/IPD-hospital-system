@@ -1,0 +1,317 @@
+{% extends 'layout.html' %}
+{% include 'includes/_navbar.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="../static/css/nurse_page.css">
+{% endblock %}
+
+{% block body %}
+<div style="padding-bottom: 3rem;"></div>
+<div class="container">
+    <div class="header">
+        <div>
+            <h1>Dashboard</h1><h6 class="text-muted">Welcome, Nurse</h6>
+        </div>
+    </div>
+    <hr size="30" style="padding-bottom: 2rem;">
+    <h3 class="sub-heading">
+        <span>Patient List</span>
+    </h3>
+    <div class="table-responsive my-table" id="my-table" style="overflow-x: hidden;">
+        <table id="dtBasicExample" class="table" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th style="display: none" >Patient ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Blood Group</th>
+                <th>Disease</th>
+                <th>Allergies</th>
+                <th>Room Number</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for o in patients_list %}
+            <tr>
+                <td style="display: none">{{ o.reg_no }}</td>
+                <td>{{ o.fname }}</td>
+                <td>{{ o.lname }}</td>
+                <td>{{ o.gender }}</td>
+                <td>{{ o.blood_group }}</td>
+                <td>{{ o.disease }}</td>
+                <td>{{ o.allergies }}</td>
+                <td>{{ o.ward_id }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <button class="btn primary-color white-text  my-btn" type="button" style="margin-bottom: 3rem;"
+            onclick="window.location.href = '/register_patient';">Add Patient
+    </button>
+</div>
+
+
+<!-- hidden button to toggle addMedicineModal -->
+<button type="button" class="add-medicine-btn modal-btn btn-primary" hidden data-toggle="modal"
+        data-target="#addMedicineModal">
+    Add Medicine
+</button>
+
+
+<!-- Add medicine Modal -->
+<div class="modal fade" id="addMedicineModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-notify modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header primary-color ">
+                <h5 class=" white-text modal-title" id="exampleModalLongTitle">Add Medicine</h5>
+                <button type="button" class="white-text close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="main-form needs-validation add_medicine_form" action="{{ url_for('dashboard') }}"
+                      method='POST'>
+                    <div hidden class="md-form">
+                        <label for="patient-id">Patient ID</label>
+                        <input type="text" name="patient-id" id="patient-id"
+                               placeholder="Enter Patient ID" class="form-control" value="">
+                        <div class="invalid-feedback"> Invalid Patient ID!</div>
+                    </div>
+                    <div class="md-form">
+                        <label for="med-name">Medicine Name</label>
+                        <input type="text" name="med-name" required pattern="[A-Za-z]{3,}" id="med-name"
+                               class="form-control" value="">
+                        <div class="invalid-feedback"> Invalid Medicine Name!</div>
+                    </div>
+                    <div class="md-form">
+                        <label for="med-strength">Enter Dosage (mg)</label>
+                        <input type="text" name="med-strength" required pattern="[0-9]{1,}"
+                               maxlength=3
+                               id="med-strength"
+                               class="form-control" value="">
+                        <div class="invalid-feedback"> Invalid Medicine Dosage!</div>
+                    </div>
+
+                    <div class="md-form">
+                        <label for="med-price">Enter Price (Rs.)</label>
+                        <input type="text" name="med-price" required pattern="[0-9]{1,}"
+                               maxlength=3
+                               id="med-price"
+                               class="form-control" value="">
+                        <div class="invalid-feedback"> Invalid Medicine Price!</div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <!--                    <button type="button" class="btn btn-rounded blue-grey white-text" data-dismiss="modal">Close</button>-->
+                <button type="submit" id="add_medicine_btn" class="btn  primary-color white-text"
+                        onclick="addMedicine();">Add Medicine
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- hidden button to toggle addTestModal -->
+<button type="button" class="add-test-btn modal-btn btn-primary" hidden data-toggle="modal"
+        data-target="#addTestModal">
+    Add Test
+</button>
+
+
+<!-- Add Test Modal -->
+<div class="modal fade" id="addTestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-notify modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header primary-color ">
+                <h5 class=" white-text modal-title" id="exampleModalLongTitle">Add Lab Tests</h5>
+                <button type="button" class=" white-text close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="main-form needs-validation add_test_form" action="{{ url_for('gen_lab_test') }}"
+                      method='POST'>
+                    <div hidden class="md-form">
+                        <label for="room-id">Room ID</label>
+                        <input type="text" name="room-id" id="room-id"
+                               class="form-control" value="">
+
+                    </div>
+                    <div class="md-form">
+                        <label for="test-name">Test Name</label>
+                        <input type="text" name="test-name" required id="test-name"
+                               class="form-control" value="">
+                        <div class="invalid-feedback"> Invalid Test Name!</div>
+                    </div>
+                    <div class="md-form">
+                        <select class="mdb-select md-form" name="laboratorist" id="laboratorist">
+                            <option value="" disabled selected>Select Laboratorist</option>
+
+                            {% for o in laboratorists %}
+                            <option value="{{ o.reg_no }}" SELECTED>{{ o.fname }} {{ o.lname }}</option>
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!--                    <button type="button" class="btn btn-rounded blue-grey white-text" data-dismiss="modal">Close</button>-->
+                <button type="button" id="add_test_btn" class="btn  primary-color white-text"
+                        onclick="addTest();">Add
+                    Lab Tests
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- hidden button to toggle Details Modal -->
+<button type="button" class="more-info-btn modal-btn btn-primary" hidden data-toggle="modal"
+        data-target="#exampleModalCenter">
+    Launch modal
+</button>
+
+<!-- Patient Details modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-notify modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header primary-color ">
+                <h5 class="modal-title white-text" id="exampleModalLong">Patient Details</h5>
+                <button type="button" class=" white-text close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body info-body">
+                <div class="names">
+                    <span hidden>First Name:</span><br>
+                    <span>First Name:</span><br>
+                    <span>Last Name:</span><br>
+                    <span>Gender:</span><br>
+                    <span>Room Number:</span><br>
+                    <span>Blood Group:</span><br>
+                    <span>Disease:</span><br>
+                    <span>Allergies:</span><br>
+
+                </div>
+                <div class="values">
+                    <span id="reg-no"></span><br>
+                    <span id="fname"></span><br>
+                    <span id="lname"></span><br>
+                    <span id="gender"></span><br>
+                    <span id="room-no"></span><br>
+                    <span id="blood-group"></span><br>
+                    <span id="disease"></span><br>
+                    <span id="allergies"></span><br>
+
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <!--                    <button type="button" class="btn btn-rounded blue-grey white-text" data-dismiss="modal">Close</button>-->
+                <button type="button" class="btn  primary-color white-text" data-dismiss="modal"
+                        onclick="addMedicineTrigger();">Add Medicine
+                </button>
+                <button type="submit" id="add_test_btn" class="btn  primary-color white-text"
+                        data-dismiss="modal"
+                        onclick="addTestTrigger();">Add Tests
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- JavaScript -->
+
+
+<!-- Patient Details -->
+<script>
+    var table = document.getElementById("my-table"), rIndex;
+    var rows = document.getElementsByTagName("tr");
+    for (var i = 1; i < rows.length; i++) {
+        rows[i].onclick = function () {
+            rIndex = this.rowIndex;
+            var patient_id = this.cells[0].innerHTML;
+            var room_id = this.cells[7].innerHTML;
+            console.log(patient_id);
+
+            document.querySelector("#fname").innerHTML = this.cells[1].innerHTML;
+            document.querySelector("#lname").innerHTML = this.cells[2].innerHTML;
+            document.querySelector("#gender").innerHTML = this.cells[3].innerHTML;
+            document.querySelector("#blood-group").innerHTML = this.cells[4].innerHTML;
+            document.querySelector("#disease").innerHTML=this.cells[5].innerText;
+
+            console.log(this.cells[5].innerText);
+            document.querySelector("#allergies").innerHTML = this.cells[6].innerHTML;
+            document.querySelector("#room-no").innerHTML = this.cells[7].innerHTML;
+            document.querySelector("#patient-id").value = patient_id;
+            document.querySelector("#room-id").value = room_id;
+            document.querySelector(".more-info-btn").click();
+
+        }
+    }
+</script>
+
+<!-- Caller to Add Medicine Function -->
+<script>
+    function addMedicineTrigger() {
+        setTimeout(function () {
+            document.querySelector(".add-medicine-btn").click();
+        }, 400);
+    }
+</script>
+<!-- Add Medicine Function -->
+<script>
+    function addMedicine() {
+        var form = document.querySelector(".add_medicine_form");
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            document.querySelector("#add_medicine_btn").setAttribute("data-dismiss", "modal");
+            form.submit();
+            // document.querySelector("#python-btn").setAttribute(onclick, form.submit());
+        }
+        form.classList.add("was-validated");
+    }
+</script>
+
+<!-- Caller to Add Test Function -->
+<script>
+    function addTestTrigger() {
+        setTimeout(function () {
+            document.querySelector(".add-test-btn").click();
+        }, 400);
+    }
+</script>
+
+<!-- Add Lab Test -->
+<script>
+    function addTest() {
+        var form = document.querySelector(".add_test_form");
+        if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            document.querySelector("#add_test_btn").setAttribute("data-dismiss", "modal")
+            form.submit();
+            // document.querySelector("#python-lab-test-btn").setAttribute(onclick, form.submit());
+        }
+        form.classList.add("was-validated");
+    }
+</script>
+
+
+{% endblock %}
